@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Registrar-se</h2>
+<form method="POST" action="/register">
+    <input type="text" name="loginUser" placeholder="Nome de Usuário" required>
+    <input type="password" name="senha" placeholder="Senha" required>
+    <input type="email" name="email" placeholder="E-mail" required>
+    <select name="tipoUser" required>
+        <option value="normal">Usuário Normal</option>
+        <option value="super">Usuário Super</option>
+    </select>
+    <button type="submit">Cadastrar</button>
+</form>
+<p><a href="{{ url_for('login') }}">Já tem uma conta? Entrar</a></p>
+{% endblock %}

@@ -1,0 +1,133 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Verdana', sans-serif;
+    background-color: #e0e0ff;
+    color: #4b0082;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background-color: #fff;
+    width: 35%;
+    padding: 60px;
+    border-radius: 20px;
+    box-shadow: 0 6px 30px rgba(75, 0, 130, 0.4);
+    color: #4b0082;
+    transition: transform 0.3s ease;
+}
+
+.container:hover {
+    transform: translateY(-10px);
+}
+
+h2 {
+    color: #4b0082;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 40px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+input, select {
+    padding: 16px;
+    border: 3px solid #dcd6f7;
+    border-radius: 12px;
+    font-size: 18px;
+    background-color: #f5f0ff;
+    color: #4b0082;
+    transition: border-color 0.4s ease, background-color 0.4s ease;
+}
+
+input:focus, select:focus {
+    border-color: #7c00ff;
+    background-color: #f0e5ff;
+    outline: none;
+}
+
+button {
+    padding: 16px;
+    background-color: #7c00ff;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+button:hover {
+    background-color: #5700b3;
+    box-shadow: 0 4px 20px rgba(75, 0, 130, 0.3);
+}
+
+a {
+    color: #4b0082;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+ul {
+    list-style: none;
+    margin-top: 20px;
+}
+
+li {
+    font-size: 16px;
+}
+
+li[style="color: red"] {
+    color: until color="#ff1744";
+}
+
+li[style="color: green"] {
+    color: #27ae60;
+}
+
+.centered-title {
+    text-align: center;
+    color: #4b0082;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 35px;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+
+}
+
+.product-card {
+    background-color: #ffffff;
+    border-radius: 14px;
+    padding: 30px;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    transition: transform 0.4s ease;
+}
+
+.product-card:hover {
+    transform: scale(1.05);
+}

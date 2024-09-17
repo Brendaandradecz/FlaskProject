@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Área do Usuário</h2>
+<h3 class="centered-title">Produtos Disponíveis:</h3>
+<div class="product-grid">
+    {% for product in products %}
+    <div class="product-card">
+        <p><strong>{{ product[1] }}</strong></p>
+        <p>Quantidade: {{ product[2] }}</p>
+        <p>Preço: R$ {{ product[3] }}</p>
+    </div>
+    {% endfor %}
+</div>
+<div class="actions">
+    <a class="button" href="{{ url_for('add_product') }}">Adicionar Produto</a>
+    <a class="button" href="{{ url_for('logout') }}">Sair</a>
+</div>
+{% endblock %}
