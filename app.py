@@ -6,11 +6,9 @@ import psycopg2
 app = Flask(__name__)
 app.secret_key = 'brenda'
 
-
 @app.route('/')
 def index():
     return render_template('login.html')
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -40,7 +38,6 @@ def login():
             flash('Usuário ou senha inválidos!', 'error')
 
     return render_template('login.html')
-
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -78,7 +75,6 @@ def register():
 
     return render_template('register.html')
 
-
 @app.route('/dashboard')
 def dashboard():
     if 'username' not in session:
@@ -96,7 +92,6 @@ def dashboard():
     conn.close()
 
     return render_template('dashboard.html', products=products)
-
 
 @app.route('/add_product', methods=['GET', 'POST'])
 def add_product():
@@ -144,12 +139,10 @@ def add_product():
 
     return render_template('add_product.html')
 
-
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('login'))
-
 
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():
@@ -159,7 +152,6 @@ def reset_password():
         return redirect(url_for('login'))
 
     return render_template('reset_password.html')
-
 
 if __name__ == '__main__':
     app.run(debug=True)
