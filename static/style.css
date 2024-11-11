@@ -198,10 +198,9 @@ button.product-btn:hover {
         margin-bottom: 10px;
     }
 }
-/* Adicionar ao seu CSS */
 .dashboard-container {
-    max-width: 1200px; /* Limita a largura da dashboard */
-    margin: 0 auto; /* Centraliza o conteúdo */
+    max-width: 1200px;
+    margin: 0 auto;
     padding: 40px;
     background-color: #fff;
     border-radius: 20px;
