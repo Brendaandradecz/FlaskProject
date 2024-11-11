@@ -11,17 +11,21 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
+    padding: 20px;
+    flex-direction: column;
 }
 
 .container {
     background-color: #fff;
-    width: 35%;
-    padding: 60px;
+    width: 100%;
+    max-width: 100%;
+    padding: 40px;
     border-radius: 20px;
     box-shadow: 0 6px 30px rgba(75, 0, 130, 0.4);
     color: #4b0082;
     transition: transform 0.3s ease;
+    text-align: center;
 }
 
 .container:hover {
@@ -30,104 +34,234 @@ body {
 
 h2 {
     color: #4b0082;
-    text-align: center;
     font-size: 30px;
-    font-weight: 700;
-    margin-bottom: 40px;
+    font-weight: 600;
+    margin-bottom: 30px;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-}
-
-input, select {
-    padding: 16px;
-    border: 3px solid #dcd6f7;
-    border-radius: 12px;
-    font-size: 18px;
-    background-color: #f5f0ff;
-    color: #4b0082;
-    transition: border-color 0.4s ease, background-color 0.4s ease;
-}
-
-input:focus, select:focus {
-    border-color: #7c00ff;
-    background-color: #f0e5ff;
-    outline: none;
+form input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 2px solid #4b0082;
+    border-radius: 8px;
+    font-size: 16px;
 }
 
 button {
-    padding: 16px;
+    padding: 12px;
     background-color: #7c00ff;
     color: #fff;
     border: none;
-    border-radius: 12px;
-    font-size: 18px;
-    font-weight: bold;
+    border-radius: 8px;
+    font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.4s ease, box-shadow 0.4s ease;
+    width: 100%;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 20px;
 }
 
 button:hover {
     background-color: #5700b3;
-    box-shadow: 0 4px 20px rgba(75, 0, 130, 0.3);
+    box-shadow: 0 4px 15px rgba(75, 0, 130, 0.3);
 }
 
 a {
-    color: #4b0082;
+    display: block;
+    margin-top: 20px;
     text-align: center;
+    color: #7c00ff;
     text-decoration: none;
-    font-size: 16px;
+    font-weight: bold;
+    transition: color 0.3s ease;
 }
 
 a:hover {
-    text-decoration: underline;
+    color: #5700b3;
 }
 
-ul {
-    list-style: none;
+.dashboard {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dashboard-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
     margin-top: 20px;
 }
 
-li {
+.product-card {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(75, 0, 130, 0.2);
+    text-align: center;
+    width: 100%;
+    max-width: 250px;
+    margin-bottom: 20px;
+}
+
+.product-card h3 {
+    color: #4b0082;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.product-card p {
+    color: #7c00ff;
     font-size: 16px;
 }
 
-li[style="color: red"] {
-    color: until color="#ff1744";
+button.product-btn {
+    padding: 10px;
+    background-color: #7c00ff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    margin-top: 10px;
 }
 
-li[style="color: green"] {
-    color: #27ae60;
+button.product-btn:hover {
+    background-color: #5700b3;
+    box-shadow: 0 4px 15px rgba(75, 0, 130, 0.3);
 }
 
-.centered-title {
-    text-align: center;
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.button-group button {
+    width: 48%;
+    padding: 10px;
+    background-color: #7c00ff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.button-group button:hover {
+    background-color: #5700b3;
+    box-shadow: 0 4px 15px rgba(75, 0, 130, 0.3);
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    form input {
+        font-size: 14px;
+    }
+
+    button {
+        font-size: 14px;
+    }
+
+    .dashboard-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .product-card {
+        max-width: 100%;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    .button-group button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+/* Adicionar ao seu CSS */
+.dashboard-container {
+    max-width: 1200px; /* Limita a largura da dashboard */
+    margin: 0 auto; /* Centraliza o conteúdo */
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 6px 30px rgba(75, 0, 130, 0.2);
+}
+
+h1, h2 {
     color: #4b0082;
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 35px;
 }
 
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 30px;
-    margin-top: 30px;
-
+.table {
+    width: 100%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
 }
 
-.product-card {
-    background-color: #ffffff;
-    border-radius: 14px;
-    padding: 30px;
-    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.2);
+.table th, .table td {
+    padding: 12px;
     text-align: center;
-    transition: transform 0.4s ease;
+    border: 1px solid #ddd;
 }
 
-.product-card:hover {
-    transform: scale(1.05);
+.table th {
+    background-color: #4b0082;
+    color: white;
+}
+
+.table tbody tr:hover {
+    background-color: #f2f2f2;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.buttons-container .btn {
+    width: 30%;
+    font-size: 16px;
+    padding: 10px;
+    text-align: center;
+}
+
+.buttons-container .btn:hover {
+    box-shadow: 0 4px 15px rgba(75, 0, 130, 0.3);
+}
+
+.btn-warning {
+    background-color: #ff9800;
+}
+
+.btn-danger {
+    background-color: #f44336;
+}
+
+.btn-primary {
+    background-color: #007bff;
+}
+
+.btn-success {
+    background-color: #28a745;
 }

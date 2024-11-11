@@ -1,0 +1,31 @@
+﻿{% extends "base.html" %}
+
+
+{% block content %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Remover Produto</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<body>
+  <div class="container">
+      <h2>Confirmar Remoção do Produto</h2>
+      <p>Você tem certeza que deseja remover o produto <strong>{{ product[1] }}</strong>?</p>
+      <p><strong>Preço:</strong> R$ {{ product[4] }}</p>
+      <p><strong>Quantidade:</strong> {{ product[3] }}</p>
+
+
+      <form action="{{ url_for('confirm_remove_product', product_id=product[0]) }}" method="POST">
+          <button type="submit">Confirmar Remoção</button>
+      </form>
+
+
+      <a href="{{ url_for('dashboard') }}">Cancelar</a>
+  </div>
+</body>
+{% endblock %}
+
+
+
+
+
+

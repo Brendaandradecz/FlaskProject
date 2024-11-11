@@ -1,19 +1,51 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
-<h2>Área do Usuário</h2>
-<h3 class="centered-title">Produtos Disponíveis:</h3>
-<div class="product-grid">
-    {% for product in products %}
-    <div class="product-card">
-        <p><strong>{{ product[1] }}</strong></p>
-        <p>Quantidade: {{ product[3] }}</p>
-        <p>Preço: R$ {{ product[4] }}</p>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard</title>
+
+<body>
+<div class="container dashboard-container">
+    <h1 class="my-5">DASHBOARD</h1>
+
+    <h2>Produtos Cadastrados</h2>
+
+    {% if products %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Quantidade</th>
+                    <th>Preço</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                    <tr>
+                        <td>{{ product[0] }}</td>
+                        <td>{{ product[1] }}</td>
+                        <td>{{ product[3] }}</td>
+                        <td>{{ product[4] }}</td>
+                        <td>
+                            <a href="{{ url_for('sell_product', product_id=product[0]) }}" class="btn btn-warning btn-sm">Vender</a>
+                            <a href="{{ url_for('confirm_remove_product', product_id=product[0]) }}" class="btn btn-danger btn-sm">Remover</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Não há produtos cadastrados.</p>
+    {% endif %}
+
+    <div class="buttons-container">
+        <a href="{{ url_for('sales_report') }}" class="btn btn-primary">Gerar Relatório</a>
+        <a href="{{ url_for('add_product') }}" class="btn btn-success">Adicionar Produto</a>
+        <a href="{{ url_for('login') }}" class="btn btn-danger">Sair</a>
     </div>
-    {% endfor %}
 </div>
-<div class="actions">
-    <a class="button" href="{{ url_for('add_product') }}">Adicionar Produto</a>
-    <a class="button" href="{{ url_for('logout') }}">Sair</a>
-</div>
+</body>
 {% endblock %}
