@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from database import get_db_connection
 import pandas as pd
 import plotly.express as px
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 app = Flask(__name__)
@@ -13,7 +13,6 @@ app.secret_key = 'brendaandradecz'
 @app.route('/')
 def index():
   return render_template('login.html')
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -44,7 +43,7 @@ def register():
        email = request.form['email']
        senha = request.form['senha']
 
-       tipo_usuario = request.form.get('tipo_usuario', 'normal')  # 'normal' é o valor padrão se não for enviado
+       tipo_usuario = request.form.get('tipo_usuario', 'normal')
 
        conn = get_db_connection()
        cur = conn.cursor()
@@ -156,55 +155,51 @@ def sell_product(product_id):
 
 @app.route('/sales_report', methods=['GET', 'POST'])
 def sales_report():
-   conn = get_db_connection()
-   cur = conn.cursor()
+    conn = get_db_connection()
+    cur = conn.cursor()
 
-   cur.execute('SELECT id, nome FROM produtos')
-   products = cur.fetchall()
+    cur.execute('SELECT id, nome FROM produtos')
+    products = cur.fetchall()
 
-   if request.method == 'POST':
-       product_id = request.form['product_id']
+    graph = None
 
-       cur.execute('SELECT data_venda, quantidade FROM vendas WHERE produto_id = %s', (product_id,))
-       sales_data = cur.fetchall()
+    if request.method == 'POST':
+        product_id = request.form['product_id']
 
-       if sales_data:
-           df = pd.DataFrame(sales_data, columns=['Data', 'Quantidade'])
+        cur.execute('SELECT data_venda, quantidade FROM vendas WHERE produto_id = %s', (product_id,))
+        sales_data = cur.fetchall()
 
-           df['Data'] = pd.to_datetime(df['Data'])
+        if not sales_data:
+            flash("Nenhuma venda encontrada para o produto selecionado.")
+        else:
+            df = pd.DataFrame(sales_data, columns=['Data', 'Quantidade'])
+            df['Data'] = pd.to_datetime(df['Data'], format='%Y-%m-%d')
 
-           df = df.groupby('Data').agg({'Quantidade': 'sum'}).reset_index()
+            end_date = datetime.today()
+            start_date = end_date - timedelta(days=6)
 
-           all_dates = pd.date_range(start=df['Data'].min(), end=df['Data'].max(), freq='D')
+            df = df[(df['Data'] >= start_date) & (df['Data'] <= end_date)]
 
-           df = df.set_index('Data').reindex(all_dates, fill_value=0).reset_index()
-           df = df.rename(columns={'index': 'Data'})
+            if df.empty:
+                flash("Nenhuma venda encontrada para os últimos 7 dias.")
+            else:
+                all_dates = pd.date_range(start=start_date, end=end_date, freq='D')
+                df = df.set_index('Data').reindex(all_dates, fill_value=0).reset_index()
+                df.columns = ['Data', 'Quantidade']
 
-           fig = px.line(df, x='Data', y='Quantidade', title='Relatório de Vendas')
+                fig = px.line(df, x='Data', y='Quantidade', title='Relatório de Vendas',
+                              markers=True, line_shape='linear')
 
-           fig.update_yaxes(range=[0, 10])
+                fig.update_yaxes(range=[0, df['Quantidade'].max() + 5])
+                fig.update_xaxes(
+                    tickmode='array',
+                    tickvals=df['Data'],
+                    ticktext=df['Data'].dt.strftime('%d-%m-%Y')
+                )
 
-           fig.update_xaxes(
-               tickmode='array',
-               tickvals=df['Data'],
-               ticktext=df['Data'].dt.strftime('%d/%m')
-           )
+                graph = fig.to_html(full_html=False)
 
-           fig_html = fig.to_html(full_html=False)
-
-           cur.close()
-           conn.close()
-           return render_template('sales_report.html', fig_html=fig_html, products=products)
-
-       else:
-           cur.close()
-           conn.close()
-           return render_template('sales_report.html', message="Nenhuma venda encontrada para este produto",
-                                  products=products)
-
-   cur.close()
-   conn.close()
-   return render_template('sales_report.html', products=products)
+    return render_template('sales_report.html', products=products, graph=graph)
 
 @app.route('/confirm_remove_product/<int:product_id>', methods=['GET', 'POST'])
 def confirm_remove_product(product_id):

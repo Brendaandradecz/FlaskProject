@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 
-
 {% block content %}
 <html lang="pt-br">
 <head>
@@ -11,10 +10,9 @@
 <body>
    <h1>Relatório de Vendas</h1>
 
-
-   <form method="POST" action="/sales_report">
+   <form method="post">
        <label for="product_id">Selecione o Produto:</label>
-       <select name="product_id" id="product_id" required>
+       <select name="product_id" id="product_id">
            {% for product in products %}
                <option value="{{ product[0] }}">{{ product[1] }}</option>
            {% endfor %}
@@ -22,23 +20,20 @@
        <button type="submit">Gerar Relatório</button>
    </form>
 
+   {% with messages = get_flashed_messages() %}
+     {% if messages %}
+       <ul>
+         {% for message in messages %}
+           <li>{{ message }}</li>
+         {% endfor %}
+       </ul>
+     {% endif %}
+   {% endwith %}
 
-   {% if fig_html %}
-       <div>
-           {{ fig_html|safe }}
-       </div>
-   {% endif %}
-
-
-   {% if message %}
-       <p>{{ message }}</p>
+   {% if graph %}
+       <div>{{ graph|safe }}</div>
+   {% else %}
    {% endif %}
 </body>
 </html>
-
-
 {% endblock %}
-
-
-
-
