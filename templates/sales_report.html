@@ -1,39 +1,120 @@
-{% extends "base.html" %}
-
-{% block content %}
-<html lang="pt-br">
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Relatório de Vendas</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Vendas</title>
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h4 {
+            color: #333;
+            text-align: center;
+        }
+
+        .alert {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .graph-container {
+            margin-top: 30px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .list-group {
+            margin-top: 30px;
+        }
+
+        .list-group-item {
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .list-group-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .alert-dismissible .btn-close {
+            background-color: transparent;
+            border: none;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+            }
+        }
+    </style>
 </head>
 <body>
-   <h1>Relatório de Vendas</h1>
 
-   <form method="post">
-       <label for="product_id">Selecione o Produto:</label>
-       <select name="product_id" id="product_id">
-           {% for product in products %}
-               <option value="{{ product[0] }}">{{ product[1] }}</option>
-           {% endfor %}
-       </select>
-       <button type="submit">Gerar Relatório</button>
-   </form>
+    <div class="container">
+        <h1>Relatório de Vendas por Produto</h1>
 
-   {% with messages = get_flashed_messages() %}
-     {% if messages %}
-       <ul>
-         {% for message in messages %}
-           <li>{{ message }}</li>
-         {% endfor %}
-       </ul>
-     {% endif %}
-   {% endwith %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert alert-{{ messages[0][0] }} alert-dismissible fade show" role="alert">
+                    {{ messages[0][1] }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
+        {% endwith %}
 
-   {% if graph %}
-       <div>{{ graph|safe }}</div>
-   {% else %}
-   {% endif %}
+        {% if not graph %}
+            <p class="alert alert-info">Nenhum dado de vendas para exibir.</p>
+        {% else %}
+            <div class="graph-container">
+                <div>{{ graph|safe }}</div>
+            </div>
+        {% endif %}
+
+        {% if products %}
+            <h4>Lista de Produtos</h4>
+            <ul class="list-group">
+                {% for produto in products %}
+                    <li class="list-group-item">{{ produto }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
 </body>
 </html>
-{% endblock %}

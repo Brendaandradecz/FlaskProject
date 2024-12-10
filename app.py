@@ -153,53 +153,62 @@ def sell_product(product_id):
 
    return render_template('sell_product.html', product=produto)
 
+
 @app.route('/sales_report', methods=['GET', 'POST'])
 def sales_report():
     conn = get_db_connection()
     cur = conn.cursor()
 
-    cur.execute('SELECT id, nome FROM produtos')
-    products = cur.fetchall()
+    cur.execute('''
+        SELECT p.nome AS Produto, v.data_venda AS Data, v.quantidade AS Quantidade
+        FROM vendas v
+        JOIN produtos p ON v.produto_id = p.id
+        ORDER BY v.data_venda ASC
+    ''')
+    sales_data = cur.fetchall()
 
-    graph = None
+    cur.close()
+    conn.close()
 
-    if request.method == 'POST':
-        product_id = request.form['product_id']
+    if not sales_data:
+        flash("Nenhuma venda encontrada.", "info")
+        return render_template('sales_report.html', products=[], graph=None)
 
-        cur.execute('SELECT data_venda, quantidade FROM vendas WHERE produto_id = %s', (product_id,))
-        sales_data = cur.fetchall()
+    df = pd.DataFrame(sales_data, columns=['Produto', 'Data', 'Quantidade'])
+    df['Data'] = pd.to_datetime(df['Data']).dt.date
 
-        if not sales_data:
-            flash("Nenhuma venda encontrada para o produto selecionado.")
-        else:
-            df = pd.DataFrame(sales_data, columns=['Data', 'Quantidade'])
-            df['Data'] = pd.to_datetime(df['Data'], format='%Y-%m-%d')
+    df_grouped = df.groupby(['Data', 'Produto']).agg({'Quantidade': 'sum'}).reset_index()
 
-            end_date = datetime.today()
-            start_date = end_date - timedelta(days=6)
+    fig = px.bar(
+        df_grouped,
+        x='Data',
+        y='Quantidade',
+        color='Produto',
+        title='Quantidade Total de Produtos Vendidos por Dia',
+        barmode='stack',
+        height=500
+    )
 
-            df = df[(df['Data'] >= start_date) & (df['Data'] <= end_date)]
+    fig.update_layout(
+        xaxis_title='Data',
+        yaxis_title='Quantidade Vendida',
+        xaxis=dict(tickformat='%d-%m-%Y'),
+        plot_bgcolor='#F4F7FB',
+        title_x=0.5,
+        title_font=dict(size=18, color='#333333'),
+        yaxis=dict(showgrid=True, gridcolor='rgba(0, 0, 0, 0.1)'),
+        legend_title='Produto'
+    )
 
-            if df.empty:
-                flash("Nenhuma venda encontrada para os últimos 7 dias.")
-            else:
-                all_dates = pd.date_range(start=start_date, end=end_date, freq='D')
-                df = df.set_index('Data').reindex(all_dates, fill_value=0).reset_index()
-                df.columns = ['Data', 'Quantidade']
+    fig.update_traces(marker=dict(line=dict(width=2, color='rgb(255, 255, 255)')), opacity=0.7)
 
-                fig = px.line(df, x='Data', y='Quantidade', title='Relatório de Vendas',
-                              markers=True, line_shape='linear')
+    graph = fig.to_html(full_html=False)
 
-                fig.update_yaxes(range=[0, df['Quantidade'].max() + 5])
-                fig.update_xaxes(
-                    tickmode='array',
-                    tickvals=df['Data'],
-                    ticktext=df['Data'].dt.strftime('%d-%m-%Y')
-                )
-
-                graph = fig.to_html(full_html=False)
+    products = [produto[0] for produto in sales_data]
 
     return render_template('sales_report.html', products=products, graph=graph)
+
+
 
 @app.route('/confirm_remove_product/<int:product_id>', methods=['GET', 'POST'])
 def confirm_remove_product(product_id):
@@ -283,6 +292,7 @@ def new_password():
            conn.close()
 
    return render_template('new_password.html')
+
 
 if __name__ == '__main__':
   app.run(debug=True)
